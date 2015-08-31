@@ -1,4 +1,4 @@
-/**
+ /**
  * Example Signon flow
  */
 'use strict';
@@ -14,11 +14,13 @@ var {
     View,
 } = React;
 
+var PhoneInput = require('./phoneInput.js');
+
 var reactNativeExampleSignon = React.createClass({
     getInitialState: function(){
         console.log('constructor');
         return {
-            opacityValue: new Animated.Value(1),
+            opacityValue: new Animated.Value(0),
             phoneNum: ''
         };
     },
@@ -27,76 +29,53 @@ var reactNativeExampleSignon = React.createClass({
     },
     componentDidMount: function(){
         console.log('componentDidMount');
-        console.log(this.state);
-        // this.state = {};
-        // this.state.opacityValue = 1;
         Animated.timing(this.state.opacityValue, {
-            toValue: 0,
+            toValue: 1,
             duration: 400
         }).start();
     },
-    onPhoneChange: function(text){
-        console.log(text);
-        this.setState({ text });
+    onPhoneSubmit: function(){
     },
     onPressFacebook: function(){
     },
     render: function() {
-        console.log('render');
+        console.log(this.state.opacityValue);
         var welcomeText =
-          <Text style={{
-              fontSize: 30,
-              textAlign: 'center',
-              margin: 10,
-              // opacity: this.state.opacityValue
-            }}>
+          <Animated.Text style={[ style.welcomeText,
+              { opacity: this.state.opacityValue }
+            ]}>
               Welcome
-            </Text>;
+          </Animated.Text>;
 
         var fbButton =
-            <TouchableHighlight style={{
-              backgroundColor: '#ff0',
-            }}>
-              <Text style={{fontSize: 30, }}
+            <TouchableHighlight style={[style.fbButtonHighlight ]}>
+              <Animated.Text style={[ style.fbButtonText,
+                { opacity: this.state.opacityValue }]}
                     onPress={ this.onPressFacebook }>
-                 Sign in with Facebook
-              </Text>
+                 Login with Facebook
+              </Animated.Text>
             </TouchableHighlight>;
 
         var orText =
-          <Text style={{
-              textAlign: 'center',
-              fontSize: 20,
-              // opacity: this.state.opacityValue
-            }}>
-            or
-          </Text>;
+          <Animated.Text style={[ style.orText,
+              {opacity: this.state.opacityValue}
+            ]}>
+            or enter your phone number
+          </Animated.Text>;
 
-        var phoneInput =
-            <TextInput style={{
-              fontSize: 30,
-              height: 40,
-              textAlign: 'center'
-              // opacity: this.state.opacityValue
-             }}
-             onChangeText={ this.onPhoneChange }
-             value={ this.state.phoneNum }
-             keyboardType={ 'numeric' } />;
-
+        var phoneInput = <PhoneInput style={{}} onSubmitEditing={this.phoneSubmit} />
         var debugInfo =
-          <Text style={{
-              textAlign: 'center',
-              color: '#333333',
-              fontSize: 8,
-              // opacity: this.state.opacityValue
-            }}>
+          <Animated.Text style={[style.debugInfo,
+            { opacity: this.state.opacityValue}
+          ]}>
               Press Cmd+R to reload,{'\n'}
               Cmd+D or shake for dev menu
-          </Text>;
+          </Animated.Text>;
 
         return (
             <Animated.View style={style.container}>
               { welcomeText }
+              { fbButton }
               { orText }
               { phoneInput }
               { debugInfo }
@@ -111,6 +90,30 @@ var style = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#fff',
+    },
+    welcomeText: {
+        fontSize: 40,
+        textAlign: 'center',
+        margin: 10
+    },
+    debugInfo: {
+        textAlign: 'center',
+        color: '#333333',
+        fontSize: 8,
+    },
+    orText: {
+        textAlign: 'center',
+        fontSize: 14,
+        color: '#666',
+        margin: 10
+    },
+    fbButtonHighlight: {
+        backgroundColor: "rgb(73,100,162)",
+        padding: 6
+    },
+    fbButtonText: {
+        fontSize: 14,
+        color: '#fff'
     }
 });
 
